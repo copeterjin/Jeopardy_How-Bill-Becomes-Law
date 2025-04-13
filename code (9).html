@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legislative Glossary - Jeopardy</title>
+    <style>
+        /* Styles remain the same as the previous correct version */
+        body{font-family:'Arial',sans-serif;background-color:#f0f0f0;color:#333;margin:0;padding:10px;display:flex;flex-direction:column;align-items:center;min-height:100vh}h1{color:#003366;text-align:center;margin-bottom:5px}.timer-setup{text-align:center;margin-bottom:10px;font-size:.9em;color:#555}.timer-setup label{margin-right:5px}.timer-setup input{width:40px;padding:3px;text-align:center;border:1px solid #ccc;border-radius:3px;margin:0 2px}.timer-setup button{margin-left:5px;padding:3px 6px;font-size:.9em;cursor:pointer}.timer{position:fixed;top:10px;right:15px;background-color:#003366;color:#fff;padding:5px 10px;border-radius:5px;font-size:1.1em;z-index:1001;min-width:60px;text-align:center}.timer.times-up{color:#ffcccc;font-weight:700;background-color:#a00}.scoreboard{display:flex;justify-content:space-around;flex-wrap:wrap;width:90%;max-width:1000px;margin:15px auto;background-color:#e0e0e0;padding:10px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.1)}.team{text-align:center;padding:0 10px;flex:1;min-width:150px;margin-bottom:10px}.team input[type=text]{border:1px solid #ccc;padding:5px;margin-bottom:5px;width:90%;max-width:140px;text-align:center;font-weight:700}.team .score{font-size:1.8em;font-weight:700;color:#0066cc;margin:5px 0}.team button{background-color:#4CAF50;color:#fff;border:none;padding:4px 8px;text-align:center;text-decoration:none;display:inline-block;font-size:14px;margin:1px;cursor:pointer;border-radius:4px;min-width:45px}.team button.subtract{background-color:#f44336}.jeopardy-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;width:95%;max-width:1200px;margin:20px auto;background-color:#003366;padding:10px;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,.2)}.category-header,.question-cell{background-color:#003366;color:#fff;padding:15px 5px;text-align:center;font-weight:700;border-radius:5px;min-height:60px;display:flex;align-items:center;justify-content:center;font-size:1em}.category-header{font-size:.9em;text-transform:uppercase;background-color:#002244;word-wrap:break-word}.question-cell{background-color:#004488;color:#FFCC00;font-size:1.6em;cursor:pointer;transition:background-color .3s ease,transform .2s ease}.question-cell:not(.answered):hover{background-color:#0055aa;transform:scale(1.03)}.question-cell.answered{background-color:#555!important;color:#aaa;cursor:default;font-size:1em;pointer-events:none;text-decoration:line-through;transform:none!important}.question-cell.empty{background-color:#002244;pointer-events:none;cursor:default;color:#002244}.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6)}.modal-content{background-color:#fefefe;margin:8% auto;padding:30px;border:1px solid #888;width:70%;max-width:800px;border-radius:10px;position:relative;text-align:center;font-size:1.4em}.modal-question-text{margin-bottom:20px;color:#003366;min-height:50px;line-height:1.4}.modal-answer-text{display:none;margin-top:20px;color:#006600;font-style:italic;line-height:1.4}.close-button{color:#aaa;position:absolute;top:10px;right:20px;font-size:28px;font-weight:700}.close-button:focus,.close-button:hover{color:#000;text-decoration:none;cursor:pointer}#show-answer-button{background-color:#ff9800;color:#fff;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:1em;margin-top:15px}#show-answer-button:disabled{background-color:#ccc;cursor:not-allowed}#reset-button{margin-top:30px;margin-bottom:20px;padding:12px 25px;font-size:1.1em;background-color:#d9534f;color:#fff;border:none;border-radius:5px;cursor:pointer;transition:background-color .2s ease}#reset-button:hover{background-color:#c9302c}
+    </style>
+</head>
+<body>
+
+    <h1>Legislative Glossary - Jeopardy</h1>
+
+    <!-- Timer Setup -->
+    <div class="timer-setup">
+        <label for="timer-minutes">Set Timer (MM:SS):</label>
+        <input type="number" id="timer-minutes" value="15" min="0" max="99" aria-label="Minutes"> :
+        <input type="number" id="timer-seconds" value="00" min="0" max="59" aria-label="Seconds">
+        <button id="set-timer-button">Set</button>
+    </div>
+
+    <!-- Timer Display -->
+    <div class="timer" id="timer">15:00</div>
+
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+        <!-- Team structures -->
+        <div class="team" id="team1">
+            <input type="text" value="Team 1" placeholder="Enter Team 1 Name">
+            <div class="score">0</div>
+            <button class="add" data-team="1" data-value="100">+100</button>
+            <button class="subtract" data-team="1" data-value="100">-100</button><br>
+            <button class="add" data-team="1" data-value="200">+200</button>
+            <button class="subtract" data-team="1" data-value="200">-200</button><br>
+            <button class="add" data-team="1" data-value="300">+300</button>
+            <button class="subtract" data-team="1" data-value="300">-300</button><br>
+            <button class="add" data-team="1" data-value="400">+400</button>
+            <button class="subtract" data-team="1" data-value="400">-400</button><br>
+            <button class="add" data-team="1" data-value="500">+500</button>
+            <button class="subtract" data-team="1" data-value="500">-500</button>
+        </div>
+        <div class="team" id="team2">
+            <input type="text" value="Team 2" placeholder="Enter Team 2 Name">
+            <div class="score">0</div>
+            <button class="add" data-team="2" data-value="100">+100</button>
+            <button class="subtract" data-team="2" data-value="100">-100</button><br>
+            <button class="add" data-team="2" data-value="200">+200</button>
+            <button class="subtract" data-team="2" data-value="200">-200</button><br>
+            <button class="add" data-team="2" data-value="300">+300</button>
+            <button class="subtract" data-team="2" data-value="300">-300</button><br>
+            <button class="add" data-team="2" data-value="400">+400</button>
+            <button class="subtract" data-team="2" data-value="400">-400</button><br>
+            <button class="add" data-team="2" data-value="500">+500</button>
+            <button class="subtract" data-team="2" data-value="500">-500</button>
+        </div>
+        <div class="team" id="team3">
+            <input type="text" value="Team 3" placeholder="Enter Team 3 Name">
+            <div class="score">0</div>
+            <button class="add" data-team="3" data-value="100">+100</button>
+            <button class="subtract" data-team="3" data-value="100">-100</button><br>
+            <button class="add" data-team="3" data-value="200">+200</button>
+            <button class="subtract" data-team="3" data-value="200">-200</button><br>
+            <button class="add" data-team="3" data-value="300">+300</button>
+            <button class="subtract" data-team="3" data-value="300">-300</button><br>
+            <button class="add" data-team="3" data-value="400">+400</button>
+            <button class="subtract" data-team="3" data-value="400">-400</button><br>
+            <button class="add" data-team="3" data-value="500">+500</button>
+            <button class="subtract" data-team="3" data-value="500">-500</button>
+        </div>
+    </div>
+
+    <!-- Jeopardy Grid -->
+    <div class="jeopardy-grid" id="jeopardy-grid">
+        <!-- Content generated by JavaScript -->
+    </div>
+
+    <!-- Reset Button -->
+    <button id="reset-button">Reset Game</button>
+
+    <!-- Question Modal -->
+    <div id="question-modal" class="modal">
+         <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-question-text" id="modal-question">Question text goes here</div>
+            <button id="show-answer-button">Show Question (Answer)</button>
+            <div class="modal-answer-text" id="modal-answer">Answer text goes here</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Data Based *ONLY* ON GLOSSARY ---
+        const gameData = [
+            // ... (Game Data remains the same) ...
+            {category:"House Calendars",questions:[{value:100,clue:"This calendar lists public bills that do NOT address money.",question:"What is the House Calendar?"},{value:200,clue:"Appropriations bills and bills raising revenue are generally found on this calendar.",question:"What is the Union Calendar?"},{value:300,clue:"This calendar lists private bills and is called on the first and third Tuesday of each month.",question:"What is the Private Calendar?"},{value:400,clue:"Bills changing laws judged outdated or unnecessary, selected by leadership, go on this calendar.",question:"What is the Corrections Calendar?"},{value:500,clue:"According to the 'Committee of The Whole' definition, all measures on this calendar must be considered first by that committee.",question:"What is the Union Calendar?"}]},{category:"Types of Legislation",questions:[{value:100,clue:"A legislative proposal that becomes law if passed by both chambers and approved by the President.",question:"What is a Bill?"},{value:200,clue:"Designated HR or S, this type of bill affects the general public if enacted.",question:"What is a Public Bill?"},{value:300,clue:"Designated H Res or S Res, it expresses the sense of one chamber but isn't signed by the President and cannot become Public Law.",question:"What is a Simple Resolution?"},{value:400,clue:"Affecting only a specific individual or organization, often dealing with immigration.",question:"What is a Private Bill?"},{value:500,clue:"Designated H J Res or S J Res, it's treated like a bill unless proposing a Constitutional amendment.",question:"What is a Joint Resolution?"}]},{category:"House Procedures",questions:[{value:100,clue:"The box on the House Clerk's desk where members deposit bills.",question:"What is the Hopper?"},{value:200,clue:"A 90-minute period on Mondays/Tuesdays for short speeches by members who reserved a spot.",question:"What is Morning Hour?"},{value:300,clue:"This procedure allows standing committees to bring reported bills to the floor, with debate limited to two hours per subject.",question:"What is Calendar Wednesday?"},{value:400,clue:"This procedure limits debate to 40 minutes, bars amendments, and requires a 2/3 majority.",question:"What is Suspension of the Rules?"},{value:500,clue:"A committee including all members, allowing consideration under relaxed rules, especially for Union Calendar measures.",question:"What is the Committee of The Whole?"}]},{category:"Senate Procedures",questions:[{value:100,clue:"An informal term for an amendment or provision not relevant to the legislation where it's attached.",question:"What is a Rider?"},{value:200,clue:"The informal term for extended debate or other procedures used to prevent a vote on a bill.",question:"What is a Filibuster?"},{value:300,clue:"The motion used to end a filibuster.",question:"What is Cloture?"},{value:400,clue:"If cloture is invoked, further debate is limited to this maximum duration.",question:"What is 30 hours?"},{value:500,clue:"Unlike the House's general requirement, Senate amendments need not be this (relevant).",question:"What is Germane?"}]},{category:"Votes & Numbers",questions:[{value:100,clue:"The number of Senators required for a quorum, though daily business often proceeds without it unless challenged.",question:"What is 51?"},{value:200,clue:"The number of House members needed for a quorum or to sign a discharge petition.",question:"What is 218?"},{value:300,clue:"The fraction of the full Senate needed to invoke cloture.",question:"What is 3/5 (three-fifths)?"},{value:400,clue:"The majority needed to pass bills on the Corrections Calendar or under Suspension of the Rules in the House.",question:"What is 2/3 (two-thirds)?"},{value:500,clue:"The majority required in both House and Senate to override a Presidential Veto.",question:"What is 2/3 (two-thirds)?"}]},{category:"Key Terms & Actions",questions:[{value:100,clue:"The original member who introduces a bill.",question:"Who is the Sponsor?"},{value:200,clue:"A member who adds their name formally in support of another member's bill.",question:"Who is a Co-Sponsor?"},{value:300,clue:"A non-debatable motion that, if agreed to, is equivalent to defeating the question.",question:"What is a Motion to Table?"},{value:400,clue:"An amendment that would replace existing language of a bill or another amendment.",question:"What is a Substitute Amendment?"},{value:500,clue:"The President's power to refuse approval of a piece of legislation.",question:"What is a Veto?"}]}
+        ]; // End of NEW gameData
+
+        // DOM Element References
+        const grid = document.getElementById('jeopardy-grid');
+        const modal = document.getElementById('question-modal');
+        const modalQuestion = document.getElementById('modal-question');
+        const modalAnswer = document.getElementById('modal-answer');
+        const showAnswerButton = document.getElementById('show-answer-button');
+        const closeButton = document.querySelector('.close-button');
+        const resetButton = document.getElementById('reset-button');
+        const scoreboard = document.querySelector('.scoreboard');
+        const timerDisplay = document.getElementById('timer');
+        const timerMinutesInput = document.getElementById('timer-minutes');
+        const timerSecondsInput = document.getElementById('timer-seconds');
+        const setTimerButton = document.getElementById('set-timer-button');
+
+        // State Variables
+        let timerInterval = null;
+        let secondsRemaining = 0;
+        let currentCell = null; // Tracks the *DOM element* of the currently opened question cell
+
+        // Audio Context for Sound Alert
+        let audioContext;
+        function initAudio() { /* ... audio init code ... */
+             if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
+                 try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+                 catch (e) { console.error("Web Audio API not supported", e); }
+             }
+         }
+        document.body.addEventListener('click', initAudio, { once: true });
+        document.body.addEventListener('keydown', initAudio, { once: true });
+
+        function playTimesUpSound() { /* ... audio playback code ... */
+             if (!audioContext) return;
+             const oscillator = audioContext.createOscillator(); const gainNode = audioContext.createGain();
+             oscillator.connect(gainNode); gainNode.connect(audioContext.destination);
+             oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
+             gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+             gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
+             oscillator.start(audioContext.currentTime); oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Format time as MM:SS
+        function formatTime(totalSeconds) { /* ... time formatting code ... */
+             if (totalSeconds < 0) totalSeconds = 0;
+             const mins = Math.floor(totalSeconds / 60); const secs = totalSeconds % 60;
+             return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Start or restart the countdown timer
+        function startTimer() { /* ... timer start/countdown code ... */
+             if (timerInterval) clearInterval(timerInterval); timerInterval = null;
+             let minutes = parseInt(timerMinutesInput.value) || 0; let seconds = parseInt(timerSecondsInput.value) || 0;
+             seconds = Math.max(0, Math.min(59, seconds));
+             timerMinutesInput.value = String(minutes).padStart(2,'0'); timerSecondsInput.value = String(seconds).padStart(2,'0');
+             secondsRemaining = (minutes * 60) + seconds;
+             timerDisplay.textContent = formatTime(secondsRemaining); timerDisplay.classList.remove('times-up');
+             grid.style.pointerEvents = 'auto'; // Ensure grid is clickable
+             if (secondsRemaining > 0) {
+                 timerInterval = setInterval(() => {
+                     secondsRemaining--; timerDisplay.textContent = formatTime(secondsRemaining);
+                     if (secondsRemaining <= 0) {
+                         clearInterval(timerInterval); timerInterval = null;
+                         timerDisplay.textContent = "Time's Up!"; timerDisplay.classList.add('times-up');
+                         playTimesUpSound(); grid.style.pointerEvents = 'none'; // Disable grid on time up
+                     }
+                 }, 1000);
+             } else { timerDisplay.textContent = "00:00"; grid.style.pointerEvents = 'none'; } // Disable grid if starts at 0
+        }
+
+        // Build the Jeopardy grid dynamically
+        function buildBoard() { /* ... board building code ... */
+             grid.innerHTML = ''; grid.style.pointerEvents = 'auto';
+             gameData.forEach(cat => {
+                 const catDiv = document.createElement('div'); catDiv.classList.add('category-header');
+                 catDiv.textContent = cat.category; grid.appendChild(catDiv);
+             });
+             const maxQuestions = gameData.reduce((max, cat) => Math.max(max, cat.questions.length), 0);
+             const numCategories = gameData.length;
+             for (let i = 0; i < maxQuestions; i++) {
+                 for (let j = 0; j < numCategories; j++) {
+                     const questionData = gameData[j].questions[i]; const cell = document.createElement('div');
+                     if (questionData) {
+                         cell.classList.add('question-cell'); cell.textContent = `$${questionData.value}`;
+                         cell.dataset.categoryIndex = j; cell.dataset.questionIndex = i; cell.dataset.value = questionData.value;
+                         cell.addEventListener('click', handleQuestionClick); // Add listener here
+                     } else { cell.classList.add('question-cell', 'empty'); cell.textContent = ''; }
+                     grid.appendChild(cell);
+                 }
+             }
+         }
+
+
+        // --- REFINED: Handle clicking on a question cell ---
+        function handleQuestionClick(event) {
+            const clickedCell = event.currentTarget;
+
+            // --- Early Exit Checks ---
+            // 1. Check if it's actually a clickable question cell (not empty, header etc.)
+            if (!clickedCell.classList.contains('question-cell') || clickedCell.classList.contains('empty')) {
+                return;
+            }
+            // 2. Check if already answered or time is up
+            if (clickedCell.classList.contains('answered') || timerDisplay.classList.contains('times-up')) {
+                return;
+            }
+
+            // --- Assign Global Cell Reference ---
+            // Do this *after* initial checks pass
+            currentCell = clickedCell;
+
+            // --- Data Retrieval and Validation with try...catch ---
+            let questionInfo;
+            try {
+                const catIndexStr = currentCell.dataset.categoryIndex;
+                const qIndexStr = currentCell.dataset.questionIndex;
+
+                // Check if attributes exist before parsing
+                if (catIndexStr === undefined || qIndexStr === undefined) {
+                    throw new Error("Missing data attributes on cell."); // Throw error to be caught
+                }
+
+                const catIndex = parseInt(catIndexStr);
+                const qIndex = parseInt(qIndexStr);
+
+                // Check if parsed indices are valid and data exists
+                if (isNaN(catIndex) || isNaN(qIndex) || !gameData[catIndex]?.questions?.[qIndex]) {
+                     throw new Error(`Invalid data indices or missing question data: cat=${catIndex}, q=${qIndex}`);
+                }
+
+                questionInfo = gameData[catIndex].questions[qIndex];
+
+            } catch (error) {
+                console.error("Error retrieving question data:", error, "Cell:", currentCell);
+                // Reset currentCell immediately if data retrieval failed
+                currentCell = null;
+                // Optionally alert the user or handle the error gracefully
+                // alert("Sorry, there was an error loading this question.");
+                return; // Stop execution if data is bad/missing
+            }
+
+            // --- Populate and Show Modal (only if data retrieval succeeded) ---
+            modalQuestion.textContent = questionInfo.clue;
+            modalAnswer.textContent = `Question: ${questionInfo.question}`;
+            modalAnswer.style.display = 'none';
+            showAnswerButton.disabled = false;
+            showAnswerButton.textContent = 'Show Question (Answer)';
+            modal.style.display = 'block';
+        }
+
+
+        // Show the correct question in the modal
+        function showAnswer() {
+             modalAnswer.style.display = 'block';
+             showAnswerButton.disabled = true;
+             showAnswerButton.textContent = 'Answer Shown';
+        }
+
+        // Close the question modal
+        function closeModal() {
+             modal.style.display = 'none';
+             // Use try...finally to ensure currentCell is reset even if adding class fails
+             try {
+                 if (currentCell && !currentCell.classList.contains('answered')) {
+                     currentCell.classList.add('answered');
+                 }
+             } catch (error) {
+                 console.error("Error adding 'answered' class:", error, "Cell:", currentCell);
+             } finally {
+                 // Always reset currentCell after attempting to use it
+                 currentCell = null;
+             }
+         }
+
+        // Update team scores
+        function updateScore(teamIndex, amount, operation) { /* ... update score code ... */
+             const teamElement = document.getElementById(`team${teamIndex}`);
+             if (!teamElement) return;
+             const scoreElement = teamElement.querySelector('.score');
+             let currentScore = parseInt(scoreElement.textContent) || 0;
+             if (operation === 'add') { currentScore += amount; }
+             else if (operation === 'subtract') { currentScore -= amount; }
+             scoreElement.textContent = currentScore;
+        }
+
+        // Reset the entire game state
+        function resetGame() { /* ... reset game code ... */
+             document.querySelectorAll('.team .score').forEach(scoreEl => { scoreEl.textContent = '0'; });
+             buildBoard(); // Rebuilds grid and reattaches listeners
+             startTimer(); // Restarts timer and ensures grid is clickable
+             if (modal.style.display === 'block') { closeModal(); } // Close modal if open
+        }
+
+        // --- Event Listeners Setup ---
+        showAnswerButton.addEventListener('click', showAnswer);
+        closeButton.addEventListener('click', closeModal);
+        resetButton.addEventListener('click', resetGame);
+        setTimerButton.addEventListener('click', startTimer);
+        window.addEventListener('click', (event) => { if (event.target === modal) { closeModal(); } });
+        scoreboard.addEventListener('click', (event) => { /* ... score button logic ... */
+            const button = event.target.closest('button');
+            if (button && (button.classList.contains('add') || button.classList.contains('subtract'))) {
+                 const teamIndex = button.dataset.team; const value = parseInt(button.dataset.value);
+                 const operation = button.classList.contains('add') ? 'add' : 'subtract';
+                 updateScore(teamIndex, value, operation);
+             }
+        });
+
+        // --- Initial Game Setup ---
+        buildBoard();
+        startTimer();
+
+    </script>
+
+</body>
+</html>
